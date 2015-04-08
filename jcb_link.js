@@ -21,10 +21,15 @@ var jcblink_flow_manager = new function() {
    * - results page: <http://josiah.brown.edu/search~S11/?searchtype=X&searcharg=zen&searchscope=11&sortdropdown=-&SORT=D&extended=1&SUBMIT=Search&searchlimits=&searchorigarg=tzen>
    */
 
+  /* set globals, essentially class attributes */
   var bibnum = null;
   var all_html = null;
   var title = null;
   var author = null;
+  var publish_info = null;
+  var callnumber = null;
+  var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30&";
+  var full_aeon_url = null;
 
   this.check_already_run = function() {
     /* Checks to see if javascript has already been run.
@@ -47,10 +52,23 @@ var jcblink_flow_manager = new function() {
     var index = all_html.indexOf( "PermaLink to this record" );
     if (index != -1) {
       console.log( "- on bib page" );
-      grab_bib_info()
+      grab_bib();
+      // grab_bib_info()
     }  else {
       console.log( "- not bib page; done" );
     }
+  }
+
+  var grab_bib = function() {
+    /* Grabs bib via #recordnum; then continues processing.
+     * Called by check_page_type()
+     */
+    var elmnt = document.querySelector( "#recordnum" );
+    var url_string = elmnt.href;
+    var segments = url_string.split( "=" )[1];
+    bibnum = segments.slice( 0,8 );
+    console.log( "- bibnum, " + bibnum );
+    grab_bib_info();
   }
 
   var grab_bib_info = function() {
@@ -63,9 +81,10 @@ var jcblink_flow_manager = new function() {
       var label = labels[i];
       grab_title( label );
       grab_author( label );
+      grab_publish_info( label );
     }
-    console.log( "- title, " + title );
-    console.log( "- author, " + author );
+    grab_callnumber();
+    build_url();
   }
 
   var grab_title = function( label ) {
@@ -73,23 +92,80 @@ var jcblink_flow_manager = new function() {
      * Called by grab_bib_info()
      */
     if ( title == null ) {
-      var label_text = label.textContent.trim()
+      var label_text = label.textContent.trim();
       if ( label_text == "Title" ) {
-        title = label.nextElementSibling.textContent.trim()
+        title = label.nextElementSibling.textContent.trim();
+        console.log( "- title, " + title );
       }
     }
   }
 
   var grab_author = function( label ) {
-    /* Sets class title attribute.
+    /* Sets class author attribute.
      * Called by grab_bib_info()
      */
-    if ( title == null ) {
-      var label_text = label.textContent.trim()
+    if ( author == null ) {
+      var label_text = label.textContent.trim();
       if ( label_text == "Author" ) {
-        author = label.nextElementSibling.textContent.trim()
+        author = label.nextElementSibling.textContent.trim();
+        console.log( "- author, " + author );
       }
     }
+  }
+
+  var grab_publish_info = function( label ) {
+    /* Sets class publish_info attribute.
+     * Called by grab_bib_info()
+     */
+    if ( publish_info == null ) {
+      var label_text = label.textContent.trim();
+      if ( label_text == "Published" ) {
+        publish_info = label.nextElementSibling.textContent.trim();
+        console.log( "- publish_info, " + publish_info );
+      }
+    }
+  }
+
+  var grab_callnumber = function( label ) {
+    /* Sets class call_number attribute.
+     * Called by grab_bib_info()
+     */
+    if ( callnumber == null ) {
+      var row = document.querySelector( ".bibItemsEntry" );
+      var td = row.children[1];
+      for( var i=0; i < td.childNodes.length; i++ ) {
+        var elmnt = td.childNodes[i];
+        if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+          if ( elmnt.textContent.trim() == "field C" ) {
+            callnumber = elmnt.nextElementSibling.textContent.trim();
+            console.log( "- callnumber, " + callnumber );
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  var build_url = function() {
+    /* Builds proper url for class attribute.
+     * Called by grab_bib_info()
+     */
+    full_aeon_url = aeon_root_url +
+      "&ReferenceNumber=" + bibnum +
+      "&ItemTitle=" + encodeURIComponent(title) +
+      "&ItemAuthor=" + encodeURIComponent(author) +
+      "&ItemPublisher=" + encodeURIComponent(publish_info) +
+      "&CallNumber=" + encodeURIComponent(callnumber)
+      ;
+    console.log( "- full_aeon_url, " + full_aeon_url );
+    display_link();
+  }
+
+  var display_link = function() {
+    /* Builds and displays link html.
+     * Called by build_url()
+     */
+    console.log( "almost done!" );
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
