@@ -82,6 +82,7 @@ var jcblink_flow_manager = new function() {
       grab_title( label );
       grab_author( label );
       grab_publish_info( label );
+      if ( title != null && author != null && publish_info != null ) { break; }
     }
     grab_callnumber();
     build_url();
