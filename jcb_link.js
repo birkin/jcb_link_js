@@ -9,7 +9,7 @@ var jcblink_flow_manager = new function() {
    *
    * Controller class flow description:
    * - Determines page-type. If bib page...
-   * - Attempts to grab bib & title
+   * - Attempts to grab data elements
    * - Finds all item-rows and for each row:
    *   - Calls namespace `jcblink_row_processor` to process the row, which builds the links
    *   - Deletes item-barcode html
@@ -24,6 +24,7 @@ var jcblink_flow_manager = new function() {
   var bibnum = null;
   var all_html = null;
   var title = null;
+  var author = null;
 
   this.check_already_run = function() {
     /* Checks to see if javascript has already been run.
@@ -46,42 +47,49 @@ var jcblink_flow_manager = new function() {
     var index = all_html.indexOf( "PermaLink to this record" );
     if (index != -1) {
       console.log( "- on bib page" );
-      grab_title()
+      grab_bib_info()
     }  else {
       console.log( "- not bib page; done" );
     }
   }
 
-  var grab_title = function() {
+  var grab_bib_info = function() {
     /* Grabs title from bibInfoEntry class; then continues processing.
      * Called by check_already_run()
      */
     var main_bib_entry = document.querySelectorAll( ".bibInfoEntry" )[0];
-    var bib_index = { "author": 0, "title": 0 };
     var labels = document.querySelectorAll( "td.bibInfoLabel" );
     for( var i=0; i < labels.length; i++ ) {
       var label = labels[i];
+      grab_title( label );
+      grab_author( label );
+    }
+    console.log( "- title, " + title );
+    console.log( "- author, " + author );
+  }
+
+  var grab_title = function( label ) {
+    /* Sets class title attribute.
+     * Called by grab_bib_info()
+     */
+    if ( title == null ) {
       var label_text = label.textContent.trim()
-      console.log( "- label_text, " + label_text )
       if ( label_text == "Title" ) {
         title = label.nextElementSibling.textContent.trim()
       }
     }
+  }
 
-    // var cells = main_bib_entry.querySelectorAll( "td" );
-    // var bib_index = { "author": 0, "title": 0 };
-    // for( var i=0; i < cells.length; i++ ) {
-    //   var cell = cells[i];
-    //   console.log( "- cell text, " + cell.textContent.trim() );
-
-    // }
-
-
-    // if ( els.length > 0 ) {
-    //   var bib_entry = els[0];
-    //   title = bib_entry.textContent.trim();
-    // }
-    console.log( "- title, " + title );
+  var grab_author = function( label ) {
+    /* Sets class title attribute.
+     * Called by grab_bib_info()
+     */
+    if ( title == null ) {
+      var label_text = label.textContent.trim()
+      if ( label_text == "Author" ) {
+        author = label.nextElementSibling.textContent.trim()
+      }
+    }
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
