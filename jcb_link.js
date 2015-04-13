@@ -28,6 +28,7 @@ var jcblink_flow_manager = new function() {
   var author = null;
   var publish_info = null;
   var callnumber = null;
+  var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30&";
   var full_aeon_url = null;
 
@@ -132,8 +133,8 @@ var jcblink_flow_manager = new function() {
      * Called by grab_bib_info()
      */
     if ( callnumber == null ) {
-      var row = document.querySelector( ".bibItemsEntry" );
-      var td = row.children[1];
+      bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
+      var td = bib_items_entry_row.children[1];
       for( var i=0; i < td.childNodes.length; i++ ) {
         var elmnt = td.childNodes[i];
         if ( elmnt.nodeType == Node.COMMENT_NODE ) {
@@ -147,11 +148,31 @@ var jcblink_flow_manager = new function() {
     }
   }
 
+  // var grab_callnumber = function( label ) {
+  //   /* Sets class call_number attribute.
+  //    * Called by grab_bib_info()
+  //    */
+  //   if ( callnumber == null ) {
+  //     var row = document.querySelector( ".bibItemsEntry" );
+  //     var td = row.children[1];
+  //     for( var i=0; i < td.childNodes.length; i++ ) {
+  //       var elmnt = td.childNodes[i];
+  //       if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+  //         if ( elmnt.textContent.trim() == "field C" ) {
+  //           callnumber = elmnt.nextElementSibling.textContent.trim();
+  //           console.log( "- callnumber, " + callnumber );
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
   var build_url = function() {
     /* Builds proper url for class attribute.
      * Called by grab_bib_info()
      */
-    full_aeon_url = aeon_root_url +
+    var full_aeon_url = aeon_root_url +
       "&ReferenceNumber=" + bibnum +
       "&ItemTitle=" + encodeURIComponent(title) +
       "&ItemAuthor=" + encodeURIComponent(author) +
@@ -159,14 +180,38 @@ var jcblink_flow_manager = new function() {
       "&CallNumber=" + encodeURIComponent(callnumber)
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
-    display_link();
+    build_link_html( full_aeon_url );
   }
 
-  var display_link = function() {
-    /* Builds and displays link html.
+  var build_link_html = function( full_aeon_url ) {
+    /* Builds link html.
      * Called by build_url()
      */
+    var link_html = '&nbsp;&nbsp;--&nbsp;&nbsp;<a class="jcb_link" href="THE_URL">(Request)</a>';
+    link_html = link_html.replace( "THE_URL", full_aeon_url );
+    console.log( "- link_html, " + link_html );
+    display_link( link_html )
+  }
+
+  var display_link = function( link_html ) {
+    /* Displays link html.
+     * Called by build_link_html()
+     */
+    var td = bib_items_entry_row.children[0];
+    for( var i=0; i < td.childNodes.length; i++ ) {
+      var elmnt = td.childNodes[i];
+      if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+        if ( elmnt.textContent.trim() == "field 1" ) {
+          console.log( "found target jcb cell" );
+          var jcb_link_cell = elmnt.nextElementSibling;
+          console.log( "- jcb_link_cell, " + jcb_link_cell );
+          break;
+        }
+      }
+    }
     console.log( "almost done!" );
+    $( jcb_link_cell ).after( link_html );
+    console.log( "- request-scan link added" );
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
