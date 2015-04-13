@@ -5,16 +5,17 @@ var jcblink_flow_manager = new function() {
   /* Namespaces function calls.
    *
    * See <http://stackoverflow.com/a/881611> for module-pattern reference.
-   * Only check_already_run() can be called publicly, and only via ```esyscn.check_already_run();```.
+   * Minimizes chances that a function here will interfere with a similarly-named function in another imported js file.
+   * Only check_already_run() can be called publicly, and only via ```jcblink_flow_manager.check_already_run();```.
    *
    * Controller class flow description:
    * - Determines page-type. If bib page...
-   * - Attempts to grab data elements
-   * - Finds all item-rows and for each row:
-   *   - Calls namespace `jcblink_row_processor` to process the row, which builds the links
-   *   - Deletes item-barcode html
+   *   - Attempts to grab data elements
+   *   - Build Aeon link
+   *   - Builds link html
+   *   - Displays Aeon link
    *
-   * Reference:
+   * Reference Josiah pages:
    * - `JCB`: <http://josiah.brown.edu/record=b3902979~S6>
    * - `JCB REF`: <http://josiah.brown.edu/record=b6344512~S6>
    * - `JCB VISUAL MATERIALS`: <http://josiah.brown.edu/record=b5660654~S6>
