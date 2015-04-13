@@ -15,10 +15,9 @@ var jcblink_flow_manager = new function() {
    *   - Deletes item-barcode html
    *
    * Reference:
-   * - items page: <http://josiah.brown.edu/record=b4069600>
-   * - holdings page: <http://josiah.brown.edu/search~S7?/.b4069600/.b4069600/1,1,1,B/holdings~4069600&FF=&1,0,>
-   * - non-bib-holdings page: <http://josiah.brown.edu/search~S7?/tBiofizika/tbiofizika/1,4,5,B/holdings&FF=tbiofizika&1,,2>
-   * - results page: <http://josiah.brown.edu/search~S11/?searchtype=X&searcharg=zen&searchscope=11&sortdropdown=-&SORT=D&extended=1&SUBMIT=Search&searchlimits=&searchorigarg=tzen>
+   * - `JCB`: <http://josiah.brown.edu/record=b3902979~S6>
+   * - `JCB REF`: <http://josiah.brown.edu/record=b6344512~S6>
+   * - `JCB VISUAL MATERIALS`: <http://josiah.brown.edu/record=b5660654~S6>
    */
 
   /* set globals, essentially class attributes */
@@ -29,7 +28,7 @@ var jcblink_flow_manager = new function() {
   var publish_info = null;
   var callnumber = null;
   var bib_items_entry_row = null;
-  var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30&";
+  var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = null;
 
   this.check_already_run = function() {
