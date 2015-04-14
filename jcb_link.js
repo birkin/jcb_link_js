@@ -178,29 +178,76 @@ var jcblink_flow_manager = new function() {
     /* Displays link html.
      * Called by build_link_html()
      */
-    console.log( "- hereA" );
     var td = bib_items_entry_row.children[0];
     for( var i=0; i < td.childNodes.length; i++ ) {
       var elmnt = td.childNodes[i];
-      if ( elmnt.nodeType == Node.COMMENT_NODE ) {
-        if ( elmnt.textContent.trim() == "field 1" ) {
-          console.log( "- found field 1" );
-          if ( elmnt.nextElementSibling == null ){
-            var nd = document.createElement( "span" );
-            td.appendChild( nd );
-          }
-          // else {
-          //   var jcb_link_cell = elmnt.nextElementSibling;
-          // }
-          var jcb_link_cell = elmnt.nextElementSibling;
-          $( jcb_link_cell ).after( link_html );
-          break;
-        }
+      if ( elmnt.nodeType == Node.COMMENT_NODE && elmnt.textContent.trim() == "field 1" ) {
+        var jcb_link_cell = grab_target_node( elmnt, td );
+        $( jcb_link_cell ).after( link_html );
+        break;
       }
     }
-    // $( jcb_link_cell ).after( link_html );
     console.log( "- request-scan link added" );
   }
+
+  var grab_target_node = function( elmnt, td ) {
+    /* Sets and returns node to which Aeon link will be added.
+     * Called by display_link()
+     */
+     if ( elmnt.nextElementSibling == null ){  // handles errant case where JCB location is not a link
+       var nd = document.createElement( "span" );
+       td.appendChild( nd );
+     }
+     return elmnt.nextElementSibling;
+  }
+
+  // var display_link = function( link_html ) {
+  //   /* Displays link html.
+  //    * Called by build_link_html()
+  //    */
+  //   var td = bib_items_entry_row.children[0];
+  //   for( var i=0; i < td.childNodes.length; i++ ) {
+  //     var elmnt = td.childNodes[i];
+  //     if ( elmnt.nodeType == Node.COMMENT_NODE && elmnt.textContent.trim() == "field 1" ) {
+  //       if ( elmnt.nextElementSibling == null ){
+  //         var nd = document.createElement( "span" );
+  //         td.appendChild( nd );
+  //       }
+  //       var jcb_link_cell = elmnt.nextElementSibling;
+  //       $( jcb_link_cell ).after( link_html );
+  //       break;
+  //     }
+  //   }
+  //   console.log( "- request-scan link added" );
+  // }
+
+  // var display_link = function( link_html ) {
+  //   /* Displays link html.
+  //    * Called by build_link_html()
+  //    */
+  //   console.log( "- hereA" );
+  //   var td = bib_items_entry_row.children[0];
+  //   for( var i=0; i < td.childNodes.length; i++ ) {
+  //     var elmnt = td.childNodes[i];
+  //     if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+  //       if ( elmnt.textContent.trim() == "field 1" ) {
+  //         console.log( "- found field 1" );
+  //         if ( elmnt.nextElementSibling == null ){
+  //           var nd = document.createElement( "span" );
+  //           td.appendChild( nd );
+  //         }
+  //         // else {
+  //         //   var jcb_link_cell = elmnt.nextElementSibling;
+  //         // }
+  //         var jcb_link_cell = elmnt.nextElementSibling;
+  //         $( jcb_link_cell ).after( link_html );
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   // $( jcb_link_cell ).after( link_html );
+  //   console.log( "- request-scan link added" );
+  // }
 
   // var display_link = function( link_html ) {
   //   /* Displays link html.
