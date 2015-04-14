@@ -178,18 +178,49 @@ var jcblink_flow_manager = new function() {
     /* Displays link html.
      * Called by build_link_html()
      */
+    console.log( "- hereA" );
     var td = bib_items_entry_row.children[0];
     for( var i=0; i < td.childNodes.length; i++ ) {
       var elmnt = td.childNodes[i];
       if ( elmnt.nodeType == Node.COMMENT_NODE ) {
         if ( elmnt.textContent.trim() == "field 1" ) {
+          console.log( "- found field 1" );
+          if ( elmnt.nextElementSibling == null ){
+            var nd = document.createElement( "span" );
+            td.appendChild( nd );
+          }
+          // else {
+          //   var jcb_link_cell = elmnt.nextElementSibling;
+          // }
           var jcb_link_cell = elmnt.nextElementSibling;
-          break; }
+          $( jcb_link_cell ).after( link_html );
+          break;
+        }
       }
     }
-    $( jcb_link_cell ).after( link_html );
+    // $( jcb_link_cell ).after( link_html );
     console.log( "- request-scan link added" );
   }
+
+  // var display_link = function( link_html ) {
+  //   /* Displays link html.
+  //    * Called by build_link_html()
+  //    */
+  //   console.log( "- hereA" );
+  //   var td = bib_items_entry_row.children[0];
+  //   for( var i=0; i < td.childNodes.length; i++ ) {
+  //     var elmnt = td.childNodes[i];
+  //     if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+  //       if ( elmnt.textContent.trim() == "field 1" ) {
+  //         var jcb_link_cell = elmnt.nextElementSibling;
+  //         console.log( "- jcb_link_cell, " + jcb_link_cell );
+  //         console.log( "- typeof(jcb_link_cell), " + typeof(jcb_link_cell) );
+  //         break; }
+  //     }
+  //   }
+  //   $( jcb_link_cell ).after( link_html );
+  //   console.log( "- request-scan link added" );
+  // }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
 
