@@ -37,7 +37,8 @@ var jcblink_flow_manager = new function() {
      * Called by document.ready()
      */
     all_html = $("body").html().toString();  // jquery already loaded (whew)
-    var index = all_html.indexOf( "JCB Info" );
+    // var index = all_html.indexOf( "JCB Info" );
+    var index = all_html.indexOf( 'class="jcb_link"' );
     if (index != -1) {
       console.log( "- aready run" );
     } else {
