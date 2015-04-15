@@ -54,10 +54,24 @@ var jcblink_flow_manager = new function() {
     var index = all_html.indexOf( "PermaLink to this record" );
     if (index != -1) {
       console.log( "- on bib page" );
-      grab_bib();
-      // grab_bib_info()
+      check_location();
     }  else {
       console.log( "- not bib page; done" );
+    }
+  }
+
+  var check_location = function() {
+    /* Checks if this is a JCB-relevant location.
+     * Called by check_page_type()
+     */
+    bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
+    var td = bib_items_entry_row.children[0];
+    var josiah_location = td.textContent.trim();
+    if ( josiah_location.slice(0, 3) == "JCB" ) {
+      console.log( "JCB bib found" );
+      grab_bib();
+    } else {
+      console.log( "- not jcb bib page; done" );
     }
   }
 
@@ -134,8 +148,8 @@ var jcblink_flow_manager = new function() {
      * Called by grab_bib_info()
      */
     if ( callnumber == null ) {
-      bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
-      var td = bib_items_entry_row.children[1];
+      // bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
+      var td = bib_items_entry_row.children[1];  // bib_items_entry_row set by check_location()
       for( var i=0; i < td.childNodes.length; i++ ) {
         var elmnt = td.childNodes[i];
         if ( elmnt.nodeType == Node.COMMENT_NODE ) {
@@ -165,16 +179,6 @@ var jcblink_flow_manager = new function() {
     display_link( full_aeon_url );
   }
 
-  // var build_link_html = function( full_aeon_url ) {
-  //   /* Builds link html.
-  //    * Called by build_url()
-  //    */
-  //   var link_html = '&nbsp;--&nbsp;<a class="jcb_link" href="THE_URL">(Request)</a>';
-  //   link_html = link_html.replace( "THE_URL", full_aeon_url );
-  //   console.log( "- link_html, " + link_html );
-  //   display_link( link_html )
-  // }
-
   var display_link = function( full_aeon_url ) {
     /* Displays link html.
      * Called by build_url()
@@ -183,9 +187,7 @@ var jcblink_flow_manager = new function() {
     var td = bib_items_entry_row.children[0];
     var dashes = document.createTextNode( " -- " );
     var a = document.createElement( "a" );
-    // a.href = link_html;
     a.href = full_aeon_url;
-    // a.class = "jcb_link";
     a.setAttribute( "class", "jcb_link" );
     var link_text = document.createTextNode( "Request" );
     a.appendChild( link_text );
@@ -194,115 +196,36 @@ var jcblink_flow_manager = new function() {
     console.log( "- request-scan link added" );
   }
 
-  // var display_link = function( link_html ) {
-  //   /* Displays link html.
-  //    * Called by build_link_html()
-  //    */
-  //   console.log( "- starting display_link()" );
-  //   var td = bib_items_entry_row.children[0];
-  //   for( var i=0; i < td.childNodes.length; i++ ) {
-  //     var elmnt = td.childNodes[i];
-  //     if ( elmnt.nodeType == Node.COMMENT_NODE && elmnt.textContent.trim() == "field 1" ) {
-  //       var jcb_link_cell = grab_target_node( elmnt, td );
-  //       $( jcb_link_cell ).after( link_html );
-  //       break;
-  //     }
-  //   }
-  //   console.log( "- request-scan link added" );
-  // }
-
-  var grab_target_node = function( elmnt, td ) {
-    /* Sets and returns node to which Aeon link will be added.
-     * Called by display_link()
-     */
-    var target_node = elmnt.nextElementSibling;
-    if ( target_node == null || target_node == undefined ){  // handles errant case where JCB location is not a link, and weird Safari handling of `nextElementSibling`
-      target_node = try_child_nodes();
-      if ( target_node == null || target_node == undefined ){  // forces a node
-        var node = document.createElement( "span" );
-        td.appendChild( node );
-        target_node = node;
-      }
-    }
-    return target_node;
-  }
-
-  var try_child_nodes = function( td, target_node ) {
-    /* Loops through cell's nodes looking for an element.
-     * Called by display_link()
-     */
-    for( var i=0; i < td.childNodes.length; i++ ) {
-      var child_node = td.childNodes[i];
-      if ( child_node.nextElementSibling == null || child_node.nextElementSibling == undefined ){
-        continue;
-      } else {
-        target_node = child_node.nextElementSibling;
-        break;
-      }
-    }
-    return target_node;
-  }
-
-
   // var grab_target_node = function( elmnt, td ) {
   //   /* Sets and returns node to which Aeon link will be added.
   //    * Called by display_link()
   //    */
   //   var target_node = elmnt.nextElementSibling;
   //   if ( target_node == null || target_node == undefined ){  // handles errant case where JCB location is not a link, and weird Safari handling of `nextElementSibling`
-  //     for( var i=0; i < td.childNodes.length; i++ ) {
-  //       var child_node = td.childNodes[i];
-  //       if ( child_node.nextElementSibling == null || child_node.nextElementSibling == undefined ){
-  //         continue;
-  //       } else {
-  //         target_node = child_node.nextElementSibling;
-  //         break;
-  //       }
-  //     }
-  //     if ( target_node == null || target_node == undefined ){
-  //       var nd = document.createElement( "span" );
-  //       td.appendChild( nd );
-  //       target_node = nd;
+  //     target_node = try_child_nodes();
+  //     if ( target_node == null || target_node == undefined ){  // forces a node
+  //       var node = document.createElement( "span" );
+  //       td.appendChild( node );
+  //       target_node = node;
   //     }
   //   }
   //   return target_node;
   // }
 
-  // var grab_target_node = function( elmnt, td ) {
-  //   /* Sets and returns node to which Aeon link will be added.
+  // var try_child_nodes = function( td, target_node ) {
+  //   /* Loops through cell's nodes looking for an element.
   //    * Called by display_link()
   //    */
-  //   console.log( "- elmnt ..." ); console.log( elmnt );
-  //   console.log( "- td ..." ); console.log( td );
-  //   console.log( "- elmnt.nextElementSibling before ..." ); console.log( elmnt.nextElementSibling );
-  //   if ( elmnt.nextElementSibling == null || elmnt.nextElementSibling == undefined ){  // handles errant case where JCB location is not a link
-  //     console.log( "- in `if`" );
-  //     var nd = document.createElement( "span" );
-  //     td.appendChild( nd );
-  //     console.log( "- td after ..." ); console.log( td );
-  //     console.log( "- td.children..." ); console.log( td.children );
-  //     if ( elmnt.nextElementSibling == null ) {
-  //       elmnt = elmnt.nextSibling.nextSibling;
+  //   for( var i=0; i < td.childNodes.length; i++ ) {
+  //     var child_node = td.childNodes[i];
+  //     if ( child_node.nextElementSibling == null || child_node.nextElementSibling == undefined ){
+  //       continue;
+  //     } else {
+  //       target_node = child_node.nextElementSibling;
+  //       break;
   //     }
   //   }
-
-  //   console.log( "- elmnt.nextElementSibling after ... " ); console.log( elmnt.nextElementSibling );
-  //   return elmnt.nextElementSibling;
-  // }
-
-  // var grab_target_node = function( elmnt, td ) {
-  //   /* Sets and returns node to which Aeon link will be added.
-  //    * Called by display_link()
-  //    */
-  //    console.log( "- elmnt, " + elmnt );
-  //    console.log( "- td, " + td );
-  //    console.log( "- elmnt.nextElementSibling before, " + elmnt.nextElementSibling );
-  //    if ( elmnt.nextElementSibling == null ){  // handles errant case where JCB location is not a link
-  //      var nd = document.createElement( "span" );
-  //      td.appendChild( nd );
-  //    }
-  //    console.log( "- elmnt.nextElementSibling after, " + elmnt.nextElementSibling );
-  //    return elmnt.nextElementSibling;
+  //   return target_node;
   // }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
