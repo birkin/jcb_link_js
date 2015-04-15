@@ -140,7 +140,6 @@ var jcblink_flow_manager = new function() {
         var elmnt = td.childNodes[i];
         if ( elmnt.nodeType == Node.COMMENT_NODE ) {
           if ( elmnt.textContent.trim() == "field C" ) {
-            // callnumber = elmnt.nextElementSibling.textContent.trim();
             callnumber = td.textContent.trim();
             console.log( "- callnumber, " + callnumber );
             break;
