@@ -168,12 +168,13 @@ var jcblink_flow_manager = new function() {
      * Called by grab_bib_info()
      */
     var bib_links = document.getElementsByClassName( "bibLinks" );
-    var bib_link = bib_links[0];
-    var bib_link_text = bib_link.textContent;
-    var index = bib_link_text.indexOf( "Digital Version" );
-    if (index != -1) {
-      var link = bib_link.getElementsByTagName( "a" )[0];
-      digital_version_url = link.href;
+    if ( bib_links.length > 0 ) {
+      var bib_link_text = bib_links[0].textContent;
+      var index = bib_link_text.indexOf( "Digital Version" );
+      if (index != -1) {
+        var link = bib_link.getElementsByTagName( "a" )[0];
+        digital_version_url = link.href;
+      }
     }
     console.log( "- digital_version_url, " + digital_version_url );
     build_url();
