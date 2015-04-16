@@ -28,6 +28,7 @@ var jcblink_flow_manager = new function() {
   var author = null;
   var publish_info = null;
   var callnumber = null;
+  var digital_version = null;
   var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = null;
@@ -192,6 +193,22 @@ var jcblink_flow_manager = new function() {
     td.appendChild( dashes );
     td.appendChild( a );
     console.log( "- request-scan link added" );
+  }
+
+  var check_online_link = function() {
+    /* Checks for & grabs online link.
+     * Not yet called by anything
+     */
+    var bib_links = document.getElementsByClassName( "bibLinks" );
+    var bib_link = bib_links[0];
+    var bib_link_text = bib_link.textContent;
+    var index = bib_link_text.indexOf( "Digital Version" );
+    if (index != -1) {
+      console.log( "- Digital Version present" );
+    } else {
+      console.log( "- no digital version" );
+    }
+
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
