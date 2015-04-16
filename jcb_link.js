@@ -77,7 +77,7 @@ var jcblink_flow_manager = new function() {
 
   var grab_bib = function() {
     /* Grabs bib via #recordnum; then continues processing.
-     * Called by check_page_type()
+     * Called by check_location()
      */
     var elmnt = document.querySelector( "#recordnum" );
     var url_string = elmnt.href;
@@ -89,7 +89,7 @@ var jcblink_flow_manager = new function() {
 
   var grab_bib_info = function() {
     /* Grabs title from bibInfoEntry class; then continues processing.
-     * Called by check_already_run()
+     * Called by grab_bib()
      */
     var main_bib_entry = document.querySelectorAll( ".bibInfoEntry" )[0];
     var labels = document.querySelectorAll( "td.bibInfoLabel" );
@@ -148,7 +148,6 @@ var jcblink_flow_manager = new function() {
      * Called by grab_bib_info()
      */
     if ( callnumber == null ) {
-      // bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
       var td = bib_items_entry_row.children[1];  // bib_items_entry_row set by check_location()
       for( var i=0; i < td.childNodes.length; i++ ) {
         var elmnt = td.childNodes[i];
@@ -175,7 +174,6 @@ var jcblink_flow_manager = new function() {
       "&CallNumber=" + encodeURIComponent(callnumber)
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
-    // build_link_html( full_aeon_url );
     display_link( full_aeon_url );
   }
 
@@ -195,38 +193,6 @@ var jcblink_flow_manager = new function() {
     td.appendChild( a );
     console.log( "- request-scan link added" );
   }
-
-  // var grab_target_node = function( elmnt, td ) {
-  //   /* Sets and returns node to which Aeon link will be added.
-  //    * Called by display_link()
-  //    */
-  //   var target_node = elmnt.nextElementSibling;
-  //   if ( target_node == null || target_node == undefined ){  // handles errant case where JCB location is not a link, and weird Safari handling of `nextElementSibling`
-  //     target_node = try_child_nodes();
-  //     if ( target_node == null || target_node == undefined ){  // forces a node
-  //       var node = document.createElement( "span" );
-  //       td.appendChild( node );
-  //       target_node = node;
-  //     }
-  //   }
-  //   return target_node;
-  // }
-
-  // var try_child_nodes = function( td, target_node ) {
-  //   /* Loops through cell's nodes looking for an element.
-  //    * Called by display_link()
-  //    */
-  //   for( var i=0; i < td.childNodes.length; i++ ) {
-  //     var child_node = td.childNodes[i];
-  //     if ( child_node.nextElementSibling == null || child_node.nextElementSibling == undefined ){
-  //       continue;
-  //     } else {
-  //       target_node = child_node.nextElementSibling;
-  //       break;
-  //     }
-  //   }
-  //   return target_node;
-  // }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
 
