@@ -28,7 +28,7 @@ var jcblink_flow_manager = new function() {
   var author = null;
   var publish_info = null;
   var callnumber = null;
-  var digital_version = null;
+  var digital_version_url = "not_applicable";
   var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = null;
@@ -102,7 +102,7 @@ var jcblink_flow_manager = new function() {
       if ( title != null && author != null && publish_info != null ) { break; }
     }
     grab_callnumber();
-    build_url();
+    check_online_link();
   }
 
   var grab_title = function( label ) {
@@ -163,6 +163,22 @@ var jcblink_flow_manager = new function() {
     }
   }
 
+  var check_online_link = function() {
+    /* Checks for & grabs online link.
+     * Called by grab_bib_info()
+     */
+    var bib_links = document.getElementsByClassName( "bibLinks" );
+    var bib_link = bib_links[0];
+    var bib_link_text = bib_link.textContent;
+    var index = bib_link_text.indexOf( "Digital Version" );
+    if (index != -1) {
+      var link = bib_link.getElementsByTagName( "a" )[0];
+      digital_version_url = link.href;
+    }
+    console.log( "- digital_version_url, " + digital_version_url );
+    build_url();
+  }
+
   var build_url = function() {
     /* Builds proper url for class attribute.
      * Called by grab_bib_info()
@@ -172,7 +188,8 @@ var jcblink_flow_manager = new function() {
       "&ItemTitle=" + encodeURIComponent(title) +
       "&ItemAuthor=" + encodeURIComponent(author) +
       "&ItemPublisher=" + encodeURIComponent(publish_info) +
-      "&CallNumber=" + encodeURIComponent(callnumber)
+      "&CallNumber=" + encodeURIComponent(callnumber) +
+      "&ItemInfo2=" + encodeURIComponent(digital_version_url)
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
     display_link( full_aeon_url );
@@ -193,22 +210,6 @@ var jcblink_flow_manager = new function() {
     td.appendChild( dashes );
     td.appendChild( a );
     console.log( "- request-scan link added" );
-  }
-
-  var check_online_link = function() {
-    /* Checks for & grabs online link.
-     * Not yet called by anything
-     */
-    var bib_links = document.getElementsByClassName( "bibLinks" );
-    var bib_link = bib_links[0];
-    var bib_link_text = bib_link.textContent;
-    var index = bib_link_text.indexOf( "Digital Version" );
-    if (index != -1) {
-      console.log( "- Digital Version present" );
-    } else {
-      console.log( "- no digital version" );
-    }
-
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
