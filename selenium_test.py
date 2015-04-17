@@ -35,7 +35,7 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertTrue( u'ItemAuthor=Garrett' in driver.current_url )
         self.assertTrue( u'ItemPublisher=New' in driver.current_url )
         self.assertTrue( u'CallNumber=1-SIZE' in driver.current_url )
-        self.assertTrue( u'ItemInfo2=not_applicable' in driver.current_url )
+        # self.assertTrue( u'ItemInfo2=not_applicable' in driver.current_url )
 
     def test_JCB_plain_with_digital_version( self ):
         """ Checks for link and link param-values for plain JCB location but where item has digital online version. """
@@ -48,7 +48,7 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertTrue( u'ItemAuthor=Usselincx' in driver.current_url )
         self.assertTrue( u'ItemPublisher=Gedruckt' in driver.current_url )
         self.assertTrue( u'CallNumber=1-SIZE' in driver.current_url )
-        self.assertTrue( u'ItemInfo2=https' in driver.current_url )
+        # self.assertTrue( u'ItemInfo2=https' in driver.current_url )
 
     def test_JCB_REF( self ):
         """ Checks for link and link param-values for JCB-REF location. """
@@ -56,12 +56,12 @@ class JCBlinkTest( unittest.TestCase ):
         driver.get(self.base_url + "/record=b6344512~S6")
         driver.find_element_by_link_text("Request").click()
         self.assertTrue( u'aeon' in driver.current_url )
-        self.assertTrue( u'ReferenceNumber=b3902979' in driver.current_url )
-        self.assertTrue( u'ItemTitle=Monticello' in driver.current_url )
-        self.assertTrue( u'ItemAuthor=Garrett' in driver.current_url )
-        self.assertTrue( u'ItemPublisher=New' in driver.current_url )
-        self.assertTrue( u'CallNumber=1-SIZE' in driver.current_url )
-        self.assertTrue( u'ItemInfo2=not_applicable' in driver.current_url )
+        self.assertTrue( u'ReferenceNumber=b6344512' in driver.current_url )
+        self.assertTrue( u'ItemTitle=The%20papers' in driver.current_url )
+        self.assertTrue( u'ItemAuthor=Jefferson%2C%20Thomas' in driver.current_url )
+        self.assertTrue( u'ItemPublisher=Princeton' in driver.current_url )
+        self.assertTrue( u'CallNumber=E302' in driver.current_url )
+        # self.assertTrue( u'ItemInfo2=not_applicable' in driver.current_url )
 
     def test_JCB_VISUAL_MATERIALS( self ):
         """ Checks for link and link param-values for JCB-VISUAL-MATERIALS location. """
@@ -69,12 +69,12 @@ class JCBlinkTest( unittest.TestCase ):
         driver.get(self.base_url + "/record=b5660654~S6")
         driver.find_element_by_link_text("Request").click()
         self.assertTrue( u'aeon' in driver.current_url )
-        self.assertTrue( u'ReferenceNumber=b3902979' in driver.current_url )
-        self.assertTrue( u'ItemTitle=Monticello' in driver.current_url )
-        self.assertTrue( u'ItemAuthor=Garrett' in driver.current_url )
-        self.assertTrue( u'ItemPublisher=New' in driver.current_url )
-        self.assertTrue( u'CallNumber=1-SIZE' in driver.current_url )
-        self.assertTrue( u'ItemInfo2=not_applicable' in driver.current_url )
+        self.assertTrue( u'ReferenceNumber=b5660654' in driver.current_url )
+        self.assertTrue( u'ItemTitle=Thomas%20Jefferson' in driver.current_url )
+        self.assertTrue( u'ItemAuthor=null' in driver.current_url )
+        self.assertTrue( u'ItemPublisher=Princeton' in driver.current_url )
+        self.assertTrue( u'CallNumber=VHS' in driver.current_url )
+        # self.assertTrue( u'ItemInfo2=not_applicable' in driver.current_url )
 
     # end class JCBlinkTest
 
