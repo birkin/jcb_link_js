@@ -182,7 +182,7 @@ var jcblink_flow_manager = new function() {
       var bib_link_text = bib_links[0].textContent;
       var index = bib_link_text.indexOf( "Digital Version" );
       if (index != -1) {
-        var link = bib_link.getElementsByTagName( "a" )[0];
+        var link = bib_links[0].getElementsByTagName( "a" )[0];
         digital_version_url = link.href;
       }
     }
