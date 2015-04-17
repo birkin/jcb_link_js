@@ -23,15 +23,25 @@ var jcblink_flow_manager = new function() {
 
   /* set globals, essentially class attributes */
   var bibnum = null;
-  var all_html = null;
-  var title = null;
-  var author = null;
-  var publish_info = null;
-  var callnumber = null;
-  var digital_version_url = "not_applicable";
+  var all_html = "";
+  var title = "";
+  var author = "";
+  var publish_info = "";
+  var callnumber = "";
+  var digital_version_url = "";
   var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
-  var full_aeon_url = null;
+  var full_aeon_url = "";
+  // var bibnum = null;
+  // var all_html = null;
+  // var title = null;
+  // var author = null;
+  // var publish_info = null;
+  // var callnumber = null;
+  // var digital_version_url = "not_applicable";
+  // var bib_items_entry_row = null;
+  // var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
+  // var full_aeon_url = null;
 
   this.check_already_run = function() {
     /* Checks to see if javascript has already been run.
@@ -89,7 +99,7 @@ var jcblink_flow_manager = new function() {
   }
 
   var grab_bib_info = function() {
-    /* Grabs title from bibInfoEntry class; then continues processing.
+    /* Grabs bib-info from bibInfoEntry class; then continues processing.
      * Called by grab_bib()
      */
     var main_bib_entry = document.querySelectorAll( ".bibInfoEntry" )[0];
@@ -99,7 +109,7 @@ var jcblink_flow_manager = new function() {
       grab_title( label );
       grab_author( label );
       grab_publish_info( label );
-      if ( title != null && author != null && publish_info != null ) { break; }
+      if ( title != "" && author != "" && publish_info != "" ) { break; }
     }
     grab_callnumber();
     check_online_link();
@@ -109,7 +119,7 @@ var jcblink_flow_manager = new function() {
     /* Sets class title attribute.
      * Called by grab_bib_info()
      */
-    if ( title == null ) {
+    if ( title == "" ) {
       var label_text = label.textContent.trim();
       if ( label_text == "Title" ) {
         title = label.nextElementSibling.textContent.trim();
@@ -122,7 +132,7 @@ var jcblink_flow_manager = new function() {
     /* Sets class author attribute.
      * Called by grab_bib_info()
      */
-    if ( author == null ) {
+    if ( author == "" ) {
       var label_text = label.textContent.trim();
       if ( label_text == "Author" ) {
         author = label.nextElementSibling.textContent.trim();
@@ -135,7 +145,7 @@ var jcblink_flow_manager = new function() {
     /* Sets class publish_info attribute.
      * Called by grab_bib_info()
      */
-    if ( publish_info == null ) {
+    if ( publish_info == "" ) {
       var label_text = label.textContent.trim();
       if ( label_text == "Published" ) {
         publish_info = label.nextElementSibling.textContent.trim();
@@ -148,7 +158,7 @@ var jcblink_flow_manager = new function() {
     /* Sets class call_number attribute.
      * Called by grab_bib_info()
      */
-    if ( callnumber == null ) {
+    if ( callnumber == "" ) {
       var td = bib_items_entry_row.children[1];  // bib_items_entry_row set by check_location()
       for( var i=0; i < td.childNodes.length; i++ ) {
         var elmnt = td.childNodes[i];
