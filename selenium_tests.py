@@ -35,6 +35,7 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertTrue( u'ItemAuthor=Garrett' in driver.current_url )
         self.assertTrue( u'ItemPublisher=New' in driver.current_url )
         self.assertTrue( u'CallNumber=1-SIZE' in driver.current_url )
+        self.assertTrue( u'Notes=(bibnum%3A%20b3902979)' in driver.current_url )
         self.assertEqual( u'ItemInfo2=', driver.current_url[-10:] )
 
     def test_JCB_plain_with_digital_version( self ):
@@ -48,6 +49,7 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertTrue( u'ItemAuthor=Usselincx' in driver.current_url )
         self.assertTrue( u'ItemPublisher=Gedruckt' in driver.current_url )
         self.assertTrue( u'CallNumber=1-SIZE' in driver.current_url )
+        self.assertTrue( u'Notes=(bibnum%3A%20b2225840)' in driver.current_url )
         self.assertTrue( u'ItemInfo2=https' in driver.current_url )
 
     def test_JCB_REF( self ):
@@ -61,6 +63,7 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertTrue( u'ItemAuthor=Jefferson%2C%20Thomas' in driver.current_url )
         self.assertTrue( u'ItemPublisher=Princeton' in driver.current_url )
         self.assertTrue( u'CallNumber=E302' in driver.current_url )
+        self.assertTrue( u'Notes=(bibnum%3A%20b6344512)' in driver.current_url )
         self.assertEqual( u'ItemInfo2=', driver.current_url[-10:] )
 
     def test_JCB_VISUAL_MATERIALS( self ):
@@ -74,6 +77,7 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertTrue( u'ItemAuthor=&ItemPublisher' in driver.current_url )
         self.assertTrue( u'ItemPublisher=Princeton' in driver.current_url )
         self.assertTrue( u'CallNumber=VHS' in driver.current_url )
+        self.assertTrue( u'Notes=(bibnum%3A%20b5660654)' in driver.current_url )
         self.assertEqual( u'ItemInfo2=', driver.current_url[-10:] )
 
     # end class JCBlinkTest
