@@ -32,16 +32,6 @@ var jcblink_flow_manager = new function() {
   var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = "";
-  // var bibnum = null;
-  // var all_html = null;
-  // var title = null;
-  // var author = null;
-  // var publish_info = null;
-  // var callnumber = null;
-  // var digital_version_url = "not_applicable";
-  // var bib_items_entry_row = null;
-  // var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
-  // var full_aeon_url = null;
 
   this.check_already_run = function() {
     /* Checks to see if javascript has already been run.
@@ -200,6 +190,7 @@ var jcblink_flow_manager = new function() {
       "&ItemAuthor=" + encodeURIComponent(author) +
       "&ItemPublisher=" + encodeURIComponent(publish_info) +
       "&CallNumber=" + encodeURIComponent(callnumber) +
+      "&Notes=" + encodeURIComponent( "(bibnum: " + bibnum + ")" ) +
       "&ItemInfo2=" + encodeURIComponent(digital_version_url)
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
