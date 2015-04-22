@@ -190,7 +190,6 @@ var jcblink_flow_manager = new function() {
       "&ItemAuthor=" + encodeURIComponent(author) +
       "&ItemPublisher=" + encodeURIComponent(publish_info) +
       "&CallNumber=" + encodeURIComponent(callnumber) +
-      "&Notes=" + encodeURIComponent( "(bibnum: " + bibnum + ")" ) +
       "&ItemInfo2=" + encodeURIComponent(digital_version_url)
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
