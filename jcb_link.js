@@ -30,7 +30,8 @@ var jcblink_flow_manager = new function() {
   var publish_info = "";
   var callnumber = "";
   var digital_version_url = "";
-  var bib_items_entry_row = null;
+  var bib_items_entry_rows = null;
+  // var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = "";
 
@@ -63,40 +64,57 @@ var jcblink_flow_manager = new function() {
   }
 
   var check_location = function() {
-    /* Checks if this is a JCB-relevant location.
+    /* Checks if any of the locations are JCB-relevant.
      * Called by check_page_type()
      */
     bib_items_entry_rows = document.querySelectorAll( ".bibItemsEntry" );
-    var jcb_found = false;
-    for( var i=0; i < bib_items_entry_rows.length; i++ ) {
-        var row = bib_items_entry_rows[i];
-        var josiah_location = row.children[0].textContent.trim();
-        console.log( "- josiah_location, `" + josiah_location + "`" );
-        if ( josiah_location.slice(0, 3) == "JCB" ) {
-            jcb_found = true;
-            break;
-        }
-    }
+    var jcb_found = search_location_rows();
     if ( jcb_found == true ) {
-        console.log( "- JCB bib found" );
+        console.log( "- JCB bib found; proceeding" );
         grab_bib();
     } else {
         console.log( "- not jcb bib page; done" );
     }
   }
 
+  var search_location_rows = function() {
+    /* Iterates through the bibItemsEntry rows, looking for `JCB` locations.
+     * Returns boolean.
+     * Called by check_location()
+     */
+    var jcb_found = false;
+    for( var i=0; i < bib_items_entry_rows.length; i++ ) {
+        var row = bib_items_entry_rows[i];
+        var josiah_location = row.children[0].textContent.trim();
+        console.log( "- current josiah_location, `" + josiah_location + "`" );
+        if ( josiah_location.slice(0, 3) == "JCB" ) {
+            jcb_found = true;
+            break;
+        }
+    }
+    return jcb_found;
+  }
+
   // var check_location = function() {
   //   /* Checks if this is a JCB-relevant location.
   //    * Called by check_page_type()
   //    */
-  //   bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
-  //   var td = bib_items_entry_row.children[0];
-  //   var josiah_location = td.textContent.trim();
-  //   if ( josiah_location.slice(0, 3) == "JCB" ) {
-  //     console.log( "- JCB bib found" );
-  //     grab_bib();
+  //   bib_items_entry_rows = document.querySelectorAll( ".bibItemsEntry" );
+  //   var jcb_found = false;
+  //   for( var i=0; i < bib_items_entry_rows.length; i++ ) {
+  //       var row = bib_items_entry_rows[i];
+  //       var josiah_location = row.children[0].textContent.trim();
+  //       console.log( "- josiah_location, `" + josiah_location + "`" );
+  //       if ( josiah_location.slice(0, 3) == "JCB" ) {
+  //           jcb_found = true;
+  //           break;
+  //       }
+  //   }
+  //   if ( jcb_found == true ) {
+  //       console.log( "- JCB bib found" );
+  //       grab_bib();
   //   } else {
-  //     console.log( "- not jcb bib page; done" );
+  //       console.log( "- not jcb bib page; done" );
   //   }
   // }
 
