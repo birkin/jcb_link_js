@@ -31,7 +31,7 @@ var jcblink_flow_manager = new function() {
   var callnumber = "";
   var digital_version_url = "";
   var bib_items_entry_rows = null;
-  // var bib_items_entry_row = null;
+  var bib_items_entry_row = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = "";
 
@@ -95,29 +95,6 @@ var jcblink_flow_manager = new function() {
     return jcb_found;
   }
 
-  // var check_location = function() {
-  //   /* Checks if this is a JCB-relevant location.
-  //    * Called by check_page_type()
-  //    */
-  //   bib_items_entry_rows = document.querySelectorAll( ".bibItemsEntry" );
-  //   var jcb_found = false;
-  //   for( var i=0; i < bib_items_entry_rows.length; i++ ) {
-  //       var row = bib_items_entry_rows[i];
-  //       var josiah_location = row.children[0].textContent.trim();
-  //       console.log( "- josiah_location, `" + josiah_location + "`" );
-  //       if ( josiah_location.slice(0, 3) == "JCB" ) {
-  //           jcb_found = true;
-  //           break;
-  //       }
-  //   }
-  //   if ( jcb_found == true ) {
-  //       console.log( "- JCB bib found" );
-  //       grab_bib();
-  //   } else {
-  //       console.log( "- not jcb bib page; done" );
-  //   }
-  // }
-
   var grab_bib = function() {
     /* Grabs bib via #recordnum; then continues processing.
      * Called by check_location()
@@ -143,8 +120,17 @@ var jcblink_flow_manager = new function() {
       grab_publish_info( label );
       if ( title != "" && author != "" && publish_info != "" ) { break; }
     }
-    grab_callnumber();
-    check_online_link();
+    process_rows();
+    // grab_callnumber();
+    // check_online_link();
+  }
+
+  var process_rows = function() {
+    for( var i=0; i < bib_items_entry_rows.length; i++ ) {
+        var row = bib_items_entry_rows[i];
+        console.log( '- calling row-processor' );
+        jcblink_row_processor.process_item( row );
+    }
   }
 
   var grab_title = function( label ) {
@@ -186,24 +172,24 @@ var jcblink_flow_manager = new function() {
     }
   }
 
-  var grab_callnumber = function( label ) {
-    /* Sets class call_number attribute.
-     * Called by grab_bib_info()
-     */
-    if ( callnumber == "" ) {
-      var td = bib_items_entry_row.children[1];  // bib_items_entry_row set by check_location()
-      for( var i=0; i < td.childNodes.length; i++ ) {
-        var elmnt = td.childNodes[i];
-        if ( elmnt.nodeType == Node.COMMENT_NODE ) {
-          if ( elmnt.textContent.trim() == "field C" ) {
-            callnumber = td.textContent.trim();
-            console.log( "- callnumber, " + callnumber );
-            break;
-          }
-        }
-      }
-    }
-  }
+  // var grab_callnumber = function( label ) {
+  //   /* Sets class call_number attribute.
+  //    * Called by grab_bib_info()
+  //    */
+  //   if ( callnumber == "" ) {
+  //     var td = bib_items_entry_row.children[1];  // bib_items_entry_row set by check_location()
+  //     for( var i=0; i < td.childNodes.length; i++ ) {
+  //       var elmnt = td.childNodes[i];
+  //       if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+  //         if ( elmnt.textContent.trim() == "field C" ) {
+  //           callnumber = td.textContent.trim();
+  //           console.log( "- callnumber, " + callnumber );
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   var check_online_link = function() {
     /* Checks for & grabs online link.
@@ -256,6 +242,90 @@ var jcblink_flow_manager = new function() {
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
+
+
+var jcblink_row_processor = new function() {
+  /*
+   * Class flow description:
+   *   - Determines whether to show a JCB-Request link
+   *   - If so, grabs callnumber
+   *   - Builds and displays JCB-Request link html
+   */
+
+  var local_row = null;
+  var call_number = null;
+
+  this.process_item = function( row ) {
+    /* Processes each row.
+     * Called by jcblink_flow_manager.process_item_table()
+     */
+    console.log( '- processing row' );
+    local_row = row;
+    var jcb_found = check_row_location();
+    if ( jcb_found == true ) {
+      callnumber = grab_callnumber();
+    }
+  }
+
+  var check_row_location = function() {
+    /* Checks for JCB location.
+     * Returns boolean.
+     * Called by process_item()
+     */
+    var jcb_found = false;
+    var josiah_location = local_row.children[0].textContent.trim();
+    console.log( "- row josiah_location, `" + josiah_location + "`" );
+    if ( josiah_location.slice(0, 3) == "JCB" ) {
+        jcb_found = true;
+    }
+    console.log( "- jcb_found, `" + jcb_found + "`" );
+    return jcb_found;
+  }
+
+  var grab_callnumber = function() {
+    /* Sets class call_number attribute.
+     * Called by process_item()
+     */
+    var td = local_row.children[1];
+    for( var i=0; i < td.childNodes.length; i++ ) {
+      var elmnt = td.childNodes[i];
+      if ( elmnt.nodeType == Node.COMMENT_NODE ) {
+        if ( elmnt.textContent.trim() == "field C" ) {
+          callnumber = td.textContent.trim();
+          console.log( "- callnumber, " + callnumber );
+          break;
+        }
+      }
+    }
+  }
+
+  // this.process_item = function( row, title, cell_position_map, bibnum ) {
+  //   /* Processes each row.
+  //    * Called by esyscn_flow_manager.process_item_table()
+  //    */
+  //   init( cell_position_map, bibnum );
+  //   var row_dict = extract_row_data( row );
+  //   if ( evaluate_row_data(row_dict)["show_scan_button"] == true ) {
+  //     if ( title == null && local_bibnum == null ) {
+  //       title = grab_ancestor_title( row );
+  //     }
+  //     update_row( title, row_dict, row );
+  //   }
+  //   row.deleteCell( cell_position_map["barcode"] );
+  // }
+
+  var init = function( cell_position_map, bibnum ) {
+    /* Sets class variables.
+     * Called by process_item()
+     */
+     local_cell_position_map = cell_position_map;
+     local_bibnum = bibnum;
+     return;
+  }
+
+};  // end namespace jcblink_row_processor, ```var jcblink_row_processor = new function() {```
+
+
 
 
 $(document).ready(
