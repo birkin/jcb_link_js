@@ -11,7 +11,7 @@ var jcblink_flow_manager = new function() {
    * Controller class flow description:
    * - Determines page-type. If bib page...
    *   - Attempts to grab data elements
-   *   - Build Aeon link
+   *   - Builds Aeon link
    *   - Builds link html
    *   - Displays Aeon link
    *
@@ -19,6 +19,7 @@ var jcblink_flow_manager = new function() {
    * - `JCB`: <http://josiah.brown.edu/record=b3902979~S6>
    * - `JCB REF`: <http://josiah.brown.edu/record=b6344512~S6>
    * - `JCB VISUAL MATERIALS`: <http://josiah.brown.edu/record=b5660654~S6>
+   * - `JCB - multiple copies`: <http://josiah.brown.edu/record=b2223864~S6>
    */
 
   /* set globals, essentially class attributes */
@@ -65,16 +66,39 @@ var jcblink_flow_manager = new function() {
     /* Checks if this is a JCB-relevant location.
      * Called by check_page_type()
      */
-    bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
-    var td = bib_items_entry_row.children[0];
-    var josiah_location = td.textContent.trim();
-    if ( josiah_location.slice(0, 3) == "JCB" ) {
-      console.log( "JCB bib found" );
-      grab_bib();
+    bib_items_entry_rows = document.querySelectorAll( ".bibItemsEntry" );
+    var jcb_found = false;
+    for( var i=0; i < bib_items_entry_rows.length; i++ ) {
+        var row = bib_items_entry_rows[i];
+        var josiah_location = row.children[0].textContent.trim();
+        console.log( "- josiah_location, `" + josiah_location + "`" );
+        if ( josiah_location.slice(0, 3) == "JCB" ) {
+            jcb_found = true;
+            break;
+        }
+    }
+    if ( jcb_found == true ) {
+        console.log( "- JCB bib found" );
+        grab_bib();
     } else {
-      console.log( "- not jcb bib page; done" );
+        console.log( "- not jcb bib page; done" );
     }
   }
+
+  // var check_location = function() {
+  //   /* Checks if this is a JCB-relevant location.
+  //    * Called by check_page_type()
+  //    */
+  //   bib_items_entry_row = document.querySelector( ".bibItemsEntry" );
+  //   var td = bib_items_entry_row.children[0];
+  //   var josiah_location = td.textContent.trim();
+  //   if ( josiah_location.slice(0, 3) == "JCB" ) {
+  //     console.log( "- JCB bib found" );
+  //     grab_bib();
+  //   } else {
+  //     console.log( "- not jcb bib page; done" );
+  //   }
+  // }
 
   var grab_bib = function() {
     /* Grabs bib via #recordnum; then continues processing.
