@@ -32,7 +32,7 @@ var jcblink_flow_manager = new function() {
   var digital_version_url = "";
   var bib_items_entry_rows = null;
   var bib_items_entry_row = null;
-  var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
+  // var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
   var full_aeon_url = "";
 
   this.check_already_run = function() {
@@ -120,6 +120,7 @@ var jcblink_flow_manager = new function() {
       grab_publish_info( label );
       if ( title != "" && author != "" && publish_info != "" ) { break; }
     }
+    check_online_link();
     process_rows();
     // grab_callnumber();
     // check_online_link();
@@ -129,7 +130,7 @@ var jcblink_flow_manager = new function() {
     for( var i=0; i < bib_items_entry_rows.length; i++ ) {
         var row = bib_items_entry_rows[i];
         console.log( '- calling row-processor' );
-        jcblink_row_processor.process_item( row );
+        jcblink_row_processor.process_item( row, bibnum, title, author, publish_info, digital_version_url );
     }
   }
 
@@ -172,25 +173,6 @@ var jcblink_flow_manager = new function() {
     }
   }
 
-  // var grab_callnumber = function( label ) {
-  //   /* Sets class call_number attribute.
-  //    * Called by grab_bib_info()
-  //    */
-  //   if ( callnumber == "" ) {
-  //     var td = bib_items_entry_row.children[1];  // bib_items_entry_row set by check_location()
-  //     for( var i=0; i < td.childNodes.length; i++ ) {
-  //       var elmnt = td.childNodes[i];
-  //       if ( elmnt.nodeType == Node.COMMENT_NODE ) {
-  //         if ( elmnt.textContent.trim() == "field C" ) {
-  //           callnumber = td.textContent.trim();
-  //           console.log( "- callnumber, " + callnumber );
-  //           break;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   var check_online_link = function() {
     /* Checks for & grabs online link.
      * Called by grab_bib_info()
@@ -205,24 +187,23 @@ var jcblink_flow_manager = new function() {
       }
     }
     console.log( "- digital_version_url, " + digital_version_url );
-    build_url();
   }
 
-  var build_url = function() {
-    /* Builds proper url for class attribute.
-     * Called by grab_bib_info()
-     */
-    var full_aeon_url = aeon_root_url +
-      "&ReferenceNumber=" + bibnum +
-      "&ItemTitle=" + encodeURIComponent(title) +
-      "&ItemAuthor=" + encodeURIComponent(author) +
-      "&ItemPublisher=" + encodeURIComponent(publish_info) +
-      "&CallNumber=" + encodeURIComponent(callnumber) +
-      "&ItemInfo2=" + encodeURIComponent(digital_version_url)
-      ;
-    console.log( "- full_aeon_url, " + full_aeon_url );
-    display_link( full_aeon_url );
-  }
+  // var build_url = function() {
+  //   /* Builds proper url for class attribute.
+  //    * Called by grab_bib_info()
+  //    */
+  //   var full_aeon_url = aeon_root_url +
+  //     "&ReferenceNumber=" + bibnum +
+  //     "&ItemTitle=" + encodeURIComponent(title) +
+  //     "&ItemAuthor=" + encodeURIComponent(author) +
+  //     "&ItemPublisher=" + encodeURIComponent(publish_info) +
+  //     "&CallNumber=" + encodeURIComponent(callnumber) +
+  //     "&ItemInfo2=" + encodeURIComponent(digital_version_url)
+  //     ;
+  //   console.log( "- full_aeon_url, " + full_aeon_url );
+  //   display_link( full_aeon_url );
+  // }
 
   var display_link = function( full_aeon_url ) {
     /* Displays link html.
@@ -254,17 +235,36 @@ var jcblink_row_processor = new function() {
 
   var local_row = null;
   var call_number = null;
+  var bibnum = null;
+  var title = null;
+  var author = null;
+  var publish_info = null;
+  var digital_version_url = null;
+  var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
 
-  this.process_item = function( row ) {
+  this.process_item = function( row, bibnum, title, author, publish_info, digital_version_url ) {
     /* Processes each row.
      * Called by jcblink_flow_manager.process_item_table()
      */
     console.log( '- processing row' );
-    local_row = row;
+    init_processor( row, bibnum, title, author, publish_info, digital_version_url );
     var jcb_found = check_row_location();
     if ( jcb_found == true ) {
       callnumber = grab_callnumber();
+      build_url();
     }
+  }
+
+  var init_processor = function( row, bibnum, title, author, publish_info, digital_version_url ) {
+    /* Sets class attributes.
+     * Called by process_item()
+     */
+    local_row = row;
+    bibnum = bibnum;
+    title = title;
+    author = author;
+    publish_info = publish_info;
+    digital_version_url = digital_version_url;
   }
 
   var check_row_location = function() {
@@ -299,28 +299,20 @@ var jcblink_row_processor = new function() {
     }
   }
 
-  // this.process_item = function( row, title, cell_position_map, bibnum ) {
-  //   /* Processes each row.
-  //    * Called by esyscn_flow_manager.process_item_table()
-  //    */
-  //   init( cell_position_map, bibnum );
-  //   var row_dict = extract_row_data( row );
-  //   if ( evaluate_row_data(row_dict)["show_scan_button"] == true ) {
-  //     if ( title == null && local_bibnum == null ) {
-  //       title = grab_ancestor_title( row );
-  //     }
-  //     update_row( title, row_dict, row );
-  //   }
-  //   row.deleteCell( cell_position_map["barcode"] );
-  // }
-
-  var init = function( cell_position_map, bibnum ) {
-    /* Sets class variables.
+  var build_url = function() {
+    /* Builds proper url for class attribute.
      * Called by process_item()
      */
-     local_cell_position_map = cell_position_map;
-     local_bibnum = bibnum;
-     return;
+    var full_aeon_url = aeon_root_url +
+      "&ReferenceNumber=" + bibnum +
+      "&ItemTitle=" + encodeURIComponent(title) +
+      "&ItemAuthor=" + encodeURIComponent(author) +
+      "&ItemPublisher=" + encodeURIComponent(publish_info) +
+      "&CallNumber=" + encodeURIComponent(callnumber) +
+      "&ItemInfo2=" + encodeURIComponent(digital_version_url)
+      ;
+    console.log( "- full_aeon_url, " + full_aeon_url );
+    display_link( full_aeon_url );
   }
 
 };  // end namespace jcblink_row_processor, ```var jcblink_row_processor = new function() {```
