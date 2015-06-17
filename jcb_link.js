@@ -122,16 +122,6 @@ var jcblink_flow_manager = new function() {
     }
     check_online_link();
     process_rows();
-    // grab_callnumber();
-    // check_online_link();
-  }
-
-  var process_rows = function() {
-    for( var i=0; i < bib_items_entry_rows.length; i++ ) {
-        var row = bib_items_entry_rows[i];
-        console.log( '- calling row-processor' );
-        jcblink_row_processor.process_item( row, bibnum, title, author, publish_info, digital_version_url );
-    }
   }
 
   var grab_title = function( label ) {
@@ -189,37 +179,18 @@ var jcblink_flow_manager = new function() {
     console.log( "- digital_version_url, " + digital_version_url );
   }
 
-  // var build_url = function() {
-  //   /* Builds proper url for class attribute.
-  //    * Called by grab_bib_info()
-  //    */
-  //   var full_aeon_url = aeon_root_url +
-  //     "&ReferenceNumber=" + bibnum +
-  //     "&ItemTitle=" + encodeURIComponent(title) +
-  //     "&ItemAuthor=" + encodeURIComponent(author) +
-  //     "&ItemPublisher=" + encodeURIComponent(publish_info) +
-  //     "&CallNumber=" + encodeURIComponent(callnumber) +
-  //     "&ItemInfo2=" + encodeURIComponent(digital_version_url)
-  //     ;
-  //   console.log( "- full_aeon_url, " + full_aeon_url );
-  //   display_link( full_aeon_url );
-  // }
-
-  var display_link = function( full_aeon_url ) {
-    /* Displays link html.
-     * Called by build_url()
+  var process_rows = function() {
+    /* For each row, calls a `jcblink_row_processor` function to:
+     *   - grab the row's callnumber
+     *   - assemble the jcb link html & display it
+     * Called by grab_bib()
+     * Ends `jcblink_flow_manager` processing.
      */
-    console.log( "- starting display_link()" );
-    var td = bib_items_entry_row.children[0];
-    var dashes = document.createTextNode( " -- " );
-    var a = document.createElement( "a" );
-    a.href = full_aeon_url;
-    a.setAttribute( "class", "jcb_link" );
-    var link_text = document.createTextNode( "Request" );
-    a.appendChild( link_text );
-    td.appendChild( dashes );
-    td.appendChild( a );
-    console.log( "- request-scan link added" );
+    for( var i=0; i < bib_items_entry_rows.length; i++ ) {
+        var row = bib_items_entry_rows[i];
+        console.log( '- calling row-processor' );
+        jcblink_row_processor.process_item( row, bibnum, title, author, publish_info, digital_version_url );
+    }
   }
 
 };  // end namespace jcblink_flow_manager, ```var jcblink_flow_manager = new function() {```
@@ -234,7 +205,7 @@ var jcblink_row_processor = new function() {
    */
 
   var local_row = null;
-  var call_number = null;
+  var callnumber = null;
   var bibnum = null;
   var title = null;
   var author = null;
@@ -250,7 +221,7 @@ var jcblink_row_processor = new function() {
     init_processor( row, bibnum, title, author, publish_info, digital_version_url );
     var jcb_found = check_row_location();
     if ( jcb_found == true ) {
-      callnumber = grab_callnumber();
+      grab_callnumber();
       build_url();
     }
   }
@@ -313,6 +284,24 @@ var jcblink_row_processor = new function() {
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
     display_link( full_aeon_url );
+  }
+
+  var display_link = function( full_aeon_url ) {
+    /* Displays link html.
+     * Called by build_url()
+     * Ends `jcblink_row_processor` processing.
+     */
+    console.log( "- starting display_link()" );
+    var td = local_row.children[0];
+    var dashes = document.createTextNode( " -- " );
+    var a = document.createElement( "a" );
+    a.href = full_aeon_url;
+    a.setAttribute( "class", "jcb_link" );
+    var link_text = document.createTextNode( "Request" );
+    a.appendChild( link_text );
+    td.appendChild( dashes );
+    td.appendChild( a );
+    console.log( "- request-scan link added" );
   }
 
 };  // end namespace jcblink_row_processor, ```var jcblink_row_processor = new function() {```
