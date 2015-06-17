@@ -207,10 +207,10 @@ var jcblink_row_processor = new function() {
   var local_row = null;
   var callnumber = null;
   var bibnum = null;
-  var title = null;
-  var author = null;
-  var publish_info = null;
-  var digital_version_url = null;
+  var local_title = null;
+  var local_author = null;
+  var local_publish_info = null;
+  var local_digital_version_url = null;
   var aeon_root_url = "https://jcbl.aeon.atlas-sys.com/aeon.dll?Action=10&Form=30";
 
   this.process_item = function( row, bibnum, title, author, publish_info, digital_version_url ) {
@@ -232,10 +232,10 @@ var jcblink_row_processor = new function() {
      */
     local_row = row;
     bibnum = bibnum;
-    title = title;
-    author = author;
-    publish_info = publish_info;
-    digital_version_url = digital_version_url;
+    local_title = title;
+    local_author = author;
+    local_publish_info = publish_info;
+    local_digital_version_url = digital_version_url;
   }
 
   var check_row_location = function() {
@@ -276,11 +276,11 @@ var jcblink_row_processor = new function() {
      */
     var full_aeon_url = aeon_root_url +
       "&ReferenceNumber=" + bibnum +
-      "&ItemTitle=" + encodeURIComponent(title) +
-      "&ItemAuthor=" + encodeURIComponent(author) +
-      "&ItemPublisher=" + encodeURIComponent(publish_info) +
-      "&CallNumber=" + encodeURIComponent(callnumber) +
-      "&ItemInfo2=" + encodeURIComponent(digital_version_url)
+      "&ItemTitle=" + encodeURIComponent( local_title ) +
+      "&ItemAuthor=" + encodeURIComponent( local_author ) +
+      "&ItemPublisher=" + encodeURIComponent( local_publish_info ) +
+      "&CallNumber=" + encodeURIComponent( callnumber ) +
+      "&ItemInfo2=" + encodeURIComponent( local_digital_version_url )
       ;
     console.log( "- full_aeon_url, " + full_aeon_url );
     display_link( full_aeon_url );
