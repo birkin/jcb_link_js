@@ -1,6 +1,6 @@
 ### about ###
 
-jcb_link.js -- _under development_ -- builds a link in [Josiah](https://josiah.brown.edu) to hand off to the [Aeon](http://www.atlas-sys.com/aeon/) service of the [John Carter Brown Library](http://www.brown.edu/Facilities/John_Carter_Brown_Library/).
+jcb_link.js builds a link in [Josiah](https://josiah.brown.edu) to hand off to the [Aeon](http://www.atlas-sys.com/aeon/) service of the [John Carter Brown Library](http://www.brown.edu/Facilities/John_Carter_Brown_Library/).
 
 on this page...
 
@@ -9,6 +9,13 @@ on this page...
 
 
 ### notes ###
+
+- Code flow overview:
+    - determines if page is a bib -- if not, stops; if so...
+    - grabs title, author, publisher, and digital-url if available
+    - for each row...
+        - grabs callnumber
+        - builds and displays link
 
 - jcb_link.js code contact: birkin_diana@brown.edu
 

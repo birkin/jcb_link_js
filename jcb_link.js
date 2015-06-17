@@ -10,16 +10,16 @@ var jcblink_flow_manager = new function() {
    *
    * Controller class flow description:
    * - Determines page-type. If bib page...
-   *   - Attempts to grab data elements
+   *   - Attempts to grab data elements. Then for each row...
    *   - Builds Aeon link
    *   - Builds link html
    *   - Displays Aeon link
    *
    * Reference Josiah pages:
-   * - `JCB`: <http://josiah.brown.edu/record=b3902979~S6>
-   * - `JCB REF`: <http://josiah.brown.edu/record=b6344512~S6>
-   * - `JCB VISUAL MATERIALS`: <http://josiah.brown.edu/record=b5660654~S6>
-   * - `JCB - multiple copies`: <http://josiah.brown.edu/record=b2223864~S6>
+   * - `JCB`: <http://josiah.brown.edu/record=b3902979>
+   * - `JCB REF`: <http://josiah.brown.edu/record=b6344512>
+   * - `JCB VISUAL MATERIALS`: <http://josiah.brown.edu/record=b5660654>
+   * - `JCB - multiple copies`: <http://josiah.brown.edu/record=b2223864>
    */
 
   /* set globals, essentially class attributes */
