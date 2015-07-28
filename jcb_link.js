@@ -231,7 +231,7 @@ var jcblink_row_processor = new function() {
      * Called by process_item()
      */
     local_row = row;
-    bibnum = bibnum;
+    local_bibnum = bibnum;
     local_title = title;
     local_author = author;
     local_publish_info = publish_info;
@@ -275,7 +275,7 @@ var jcblink_row_processor = new function() {
      * Called by process_item()
      */
     var full_aeon_url = aeon_root_url +
-      "&ReferenceNumber=" + bibnum +
+      "&ReferenceNumber=" + local_bibnum +
       "&ItemTitle=" + encodeURIComponent( local_title ) +
       "&ItemAuthor=" + encodeURIComponent( local_author ) +
       "&ItemPublisher=" + encodeURIComponent( local_publish_info ) +
