@@ -81,6 +81,20 @@ class JCBlinkTest( unittest.TestCase ):
         # self.assertTrue( 'Notes=(bibnum%3A%20b5660654)' in driver.current_url )
         self.assertEqual( 'ItemInfo2=', driver.current_url[-10:] )
 
+    def test_very_long_title( self ):
+        """ Checks for link and link param-values for JCB-VISUAL-MATERIALS location. """
+        driver = self.driver
+        driver.get(self.base_url + "/record=b5713050~S6")
+        driver.find_element_by_link_text("Request").click()
+        self.assertTrue( 'aeon' in driver.current_url )
+        self.assertTrue( 'ReferenceNumber=b5660654' in driver.current_url )
+        self.assertTrue( 'ItemTitle=Thomas%20Jefferson' in driver.current_url )
+        self.assertTrue( 'ItemAuthor=&ItemPublisher' in driver.current_url )
+        self.assertTrue( 'ItemPublisher=Princeton' in driver.current_url )
+        self.assertTrue( 'CallNumber=VHS' in driver.current_url )
+        # self.assertTrue( 'Notes=(bibnum%3A%20b5660654)' in driver.current_url )
+        self.assertEqual( 'ItemInfo2=', driver.current_url[-10:] )
+
     # end class JCBlinkTest
 
 
