@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import os, re, time, unittest
+import os, re, time, unittest, urlparse
 from selenium import webdriver
 
 
@@ -82,18 +82,19 @@ class JCBlinkTest( unittest.TestCase ):
         self.assertEqual( 'ItemInfo2=', driver.current_url[-10:] )
 
     def test_very_long_title( self ):
-        """ Checks for link and link param-values for JCB-VISUAL-MATERIALS location. """
+        """ Checks link prepared for item with very long title which should be truncated. """
         driver = self.driver
         driver.get(self.base_url + "/record=b5713050~S6")
         driver.find_element_by_link_text("Request").click()
-        self.assertTrue( 'aeon' in driver.current_url )
-        self.assertTrue( 'ReferenceNumber=b5660654' in driver.current_url )
-        self.assertTrue( 'ItemTitle=Thomas%20Jefferson' in driver.current_url )
-        self.assertTrue( 'ItemAuthor=&ItemPublisher' in driver.current_url )
-        self.assertTrue( 'ItemPublisher=Princeton' in driver.current_url )
-        self.assertTrue( 'CallNumber=VHS' in driver.current_url )
-        # self.assertTrue( 'Notes=(bibnum%3A%20b5660654)' in driver.current_url )
-        self.assertEqual( 'ItemInfo2=', driver.current_url[-10:] )
+        url_obj = urlparse.urlparse( driver.current_url )
+        q_dct = urlparse.parse_qs( driver.current_url )
+        self.assertEqual( 'jcbl.aeon.atlas-sys.com', url_obj.netloc )
+        self.assertEqual( ['b5713050'], q_dct['ReferenceNumber'] )
+        self.assertEqual( ["The English-American his travail by sea and land: or, A new survey of the West-India's [sic], : containing a journall of three thousand and three hundred miles within the main land of America. Wherin..."], q_dct['ItemTitle'] )
+        self.assertEqual( ['foo'], q_dct['ItemAuthor'] )
+        self.assertEqual( ['foo'], q_dct['ItemPublisher'] )
+        self.assertEqual( ['foo'], q_dct['CallNumber'] )
+        self.assertEqual( ['foo'], q_dct['ItemInfo2'] )
 
     # end class JCBlinkTest
 

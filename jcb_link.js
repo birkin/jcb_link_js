@@ -124,14 +124,31 @@ var jcblink_flow_manager = new function() {
     process_rows();
   }
 
+  // var grab_title = function( label ) {
+  //   /* Sets class title attribute.
+  //    * Called by grab_bib_info()
+  //    */
+  //   if ( title == "" ) {
+  //     var label_text = label.textContent.trim();
+  //     if ( label_text == "Title" ) {
+  //       title = label.nextElementSibling.textContent.trim();
+  //       console.log( "- title, " + title );
+  //     }
+  //   }
+  // }
+
   var grab_title = function( label ) {
-    /* Sets class title attribute.
+    /* Sets class title attribute, truncated to avoid errors with loooong titles.
      * Called by grab_bib_info()
      */
     if ( title == "" ) {
       var label_text = label.textContent.trim();
       if ( label_text == "Title" ) {
         title = label.nextElementSibling.textContent.trim();
+        var max_length = 200;
+        title = title.length > max_length ?
+            title.substring(0, max_length - 3) + "..." :
+            title.substring(0, max_length);
         console.log( "- title, " + title );
       }
     }
