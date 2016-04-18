@@ -20,6 +20,7 @@ var jcblink_flow_manager = new function() {
    * - `JCB REF`: <http://josiah.brown.edu/record=b6344512>
    * - `JCB VISUAL MATERIALS`: <http://josiah.brown.edu/record=b5660654>
    * - `JCB - multiple copies`: <http://josiah.brown.edu/record=b2223864>
+   * - Very-long-title handling: <http://josiah.brown.edu/record=b5713050>
    */
 
   /* set globals, essentially class attributes */
