@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-import os, re, time, unittest, urlparse
+import os, pprint, re, time, unittest
+from urllib.parse import parse_qs, urlparse
+
 from selenium import webdriver
 
 
@@ -10,8 +11,7 @@ class JCBlinkTest( unittest.TestCase ):
 
     def setUp(self):
         self.driver = None
-        # driver_type = unicode( os.environ.get('JCBLINK_TESTS__DRIVER_TYPE') )
-        driver_type = 'firefox'
+        driver_type = os.environ.get( 'JCBLINK_TESTS__DRIVER_TYPE', 'firefox' )
         if driver_type == 'firefox':
             self.driver = webdriver.Firefox()
         else:
@@ -86,20 +86,35 @@ class JCBlinkTest( unittest.TestCase ):
         driver = self.driver
         driver.get(self.base_url + "/record=b5713050~S6")
         driver.find_element_by_link_text("Request").click()
-        url_obj = urlparse.urlparse( driver.current_url )
-        q_dct = urlparse.parse_qs( driver.current_url )
-        self.assertEqual( 'jcbl.aeon.atlas-sys.com', url_obj.netloc )
-        self.assertEqual( ['b5713050'], q_dct['ReferenceNumber'] )
-        self.assertEqual( ["The English-American his travail by sea and land: or, A new survey of the West-India's [sic], : containing a journall of three thousand and three hundred miles within the main land of America. Wherin..."], q_dct['ItemTitle'] )
-        self.assertEqual( ['foo'], q_dct['ItemAuthor'] )
-        self.assertEqual( ['foo'], q_dct['ItemPublisher'] )
-        self.assertEqual( ['foo'], q_dct['CallNumber'] )
-        self.assertEqual( ['foo'], q_dct['ItemInfo2'] )
+        url_obj = urlparse( driver.current_url )
+        q_dct = parse_qs( driver.current_url )
+        # print( 'q_dct, ```%s```' % pprint.pformat(q_dct) )
+        self.assertEqual(
+            'jcbl.aeon.atlas-sys.com',
+            url_obj.netloc )
+        self.assertEqual(
+            ['b5713050'],
+            q_dct['ReferenceNumber'] )
+        self.assertEqual(
+            ["The English-American his travail by sea and land: or, A new survey of the West-India's [sic], : containing a journall of three thousand and three hundred miles within the main land of America. Wher..."],
+            q_dct['ItemTitle'] )
+        self.assertEqual(
+            ['Gage, Thomas, 1603?-1656'],
+            q_dct['ItemAuthor'] )
+        self.assertEqual(
+            ['London : printed by R. Cotes, and are to be sold by Humphrey Blunden at the Castle in Cornhill, and Thomas Williams at the Bible in Little Britain, 1648'],
+            q_dct['ItemPublisher'] )
+        self.assertEqual(
+            ['1-SIZE D648 .G133e'],
+            q_dct['CallNumber'] )
+        self.assertEqual(
+            ['http://www.archive.org/details/englishamericanh00gage'],
+            q_dct['ItemInfo2'] )
 
     # end class JCBlinkTest
 
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner( verbosity=3 )
-    unittest.main( testRunner=runner )  # python2
-    # unittest.main( verbosity=2, warnings='ignore' )  # python3; warnings='ignore' from <http://stackoverflow.com/a/21500796>
+    # unittest.main( testRunner=runner )  # python2
+    unittest.main( verbosity=2, warnings='ignore' )  # python3; warnings='ignore' from <http://stackoverflow.com/a/21500796>
