@@ -116,7 +116,6 @@ class JCBlinkTest( unittest.TestCase ):
     # end class JCBlinkTest
 
 
-if __name__ == "__main__":
-    runner = unittest.TextTestRunner( verbosity=3 )
-    # unittest.main( testRunner=runner )  # python2
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner()
     unittest.main( verbosity=2, warnings='ignore' )  # python3; warnings='ignore' from <http://stackoverflow.com/a/21500796>
