@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" python3 tests for classic-josiah jcb/aeon links """
+
 import os, pprint, re, time, unittest
 from urllib.parse import parse_qs, urlparse
 
